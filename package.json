@@ -1,0 +1,57 @@
+{
+  "name": "node-js-getting-started",
+  "version": "0.3.0",
+  "description": "A sample Node.js app using Express 4",
+  "engines": {
+    "node": "12.x"
+  },
+  "main": "index.js",
+  "proxy": "http://localhost:4000",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha",
+    "dev": "nodemon src/index.js",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^8.2.0",
+    "ejs": "^2.5.6",
+    "env-smart": "^2.2.1",
+    "express": "^4.17.1",
+    "firebase-admin": "^9.9.0",
+    "joi": "^17.3.0",
+    "lodash": "^4.17.21",
+    "mocha": "^8.2.1",
+    "module-alias": "^2.2.2",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.12.12",
+    "prettier": "^2.2.1",
+    "prettier-eslint": "^12.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.25.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "request": "^2.81.0",
+    "tape": "^4.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heroku/node-js-getting-started"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "license": "MIT",
+  "_moduleAliases": {
+    "@": "src"
+  }
+}

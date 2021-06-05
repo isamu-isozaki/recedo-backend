@@ -1,0 +1,1 @@
+//Delete current user. do not delete commits but delete all the non-essentials like a private chapter etc

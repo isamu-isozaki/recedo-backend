@@ -1,3 +1,16 @@
+# Node build artifacts
+google-credentials.json
+node_modules
+npm-debug.log
+
+# Local development
+*.env
+*.dev
+.DS_Store
+
+# Docker
+Dockerfile
+docker-compose.yml
 # Logs
 logs
 *.log
