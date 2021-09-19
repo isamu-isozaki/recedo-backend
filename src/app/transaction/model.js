@@ -15,8 +15,8 @@ const transactionSchema = new Schema(
       required: true
     },
     message: {
-      type: mongoose.Schema.Types.Number,
-      default: ''
+      type: mongoose.Schema.Types.String,
+      required: true
     }
   },
   {

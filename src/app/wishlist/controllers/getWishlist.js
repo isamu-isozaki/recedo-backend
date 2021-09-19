@@ -12,7 +12,7 @@ const { findWishlistItems } = require('@/app/item/wishlist/repository')
 const { findWishlistById } = require('@/app/wishlist/repository')
 const { findGroupById } = require('@/app/group/repository')
 async function getWishlist (req, res) {
-  const { wishlistId } = req.body
+  const { wishlistId } = req.query
   // TODO: Delete receipt image in firebase
   const wishlist = await findWishlistById(wishlistId)
   if (!wishlist) {

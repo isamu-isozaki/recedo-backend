@@ -1,7 +1,7 @@
 {
-  "name": "node-js-getting-started",
+  "name": "node-js-recedo",
   "version": "0.3.0",
-  "description": "A sample Node.js app using Express 4",
+  "description": "A receipt app",
   "engines": {
     "node": "12.x"
   },
@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "mocha",
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon index.js",
     "lint": "eslint src"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "module-alias": "^2.2.2",
     "mongodb": "^3.5.9",
     "mongoose": "^5.12.12",
+    "nodemon": "^2.0.12",
     "prettier": "^2.2.1",
     "prettier-eslint": "^12.0.0"
   },

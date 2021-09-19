@@ -20,8 +20,9 @@ router.get('/searchItem', searchWishlistItem)
 /**
    * Put
    */
+
 const { updateItemName } = require('./controllers/updateItemName')
-router.put('/name', updateItemName)
+router.put('/itemName', updateItemName)
 /**
    * Delete
    */

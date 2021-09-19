@@ -10,9 +10,13 @@
 const { updateGroup, findGroupById } = require('@/app/group/repository')
 async function inviteMembers (req, res) {
   const { groupId, invitedUserIds } = req.body
+  if (!invitedUserIds) {
+    res.badRequest('invalid type for invited user ids')
+    return
+  }
   const group = await findGroupById(groupId)
   if (invitedUserIds.length === 0) {
-    res.success({ group })
+    res.badRequest('no invites made')
     return
   }
   if (!group.userIds.includes(req.user._id)) {
@@ -31,7 +35,7 @@ async function inviteMembers (req, res) {
       return
     }
   }
-  await updateGroup(group, { invitedUserIds: [...group.invitedUserId, ...invitedUserIds] })
+  await updateGroup(group, { invitedUserIds: [...group.invitedUserIds, ...invitedUserIds] })
   res.success({ group })
 }
 

@@ -12,7 +12,6 @@ async function startApp () {
 async function startExpressApp () {
   const express = require('express')
   const app = express()
-
   const { landingPageCors } = require('@/middlewares/cors')
   app.use(landingPageCors)
 

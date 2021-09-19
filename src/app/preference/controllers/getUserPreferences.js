@@ -17,7 +17,7 @@ const { findPreferenceByUserId } = require('@/app/preference/repository')
 const { findGroupById } = require('@/app/group/repository')
 
 async function getUserPreferences (req, res) {
-  const { groupId, userId } = req.body
+  const { groupId, userId } = req.query
   const group = await findGroupById(groupId)
   if (!group.userIds.includes(userId) || !group.userIds.includes(req.user._id)) {
     res.unauthorized()

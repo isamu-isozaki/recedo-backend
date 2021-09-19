@@ -3,6 +3,10 @@ const Schema = mongoose.Schema
 
 const groupSchema = new Schema(
   {
+    name: {
+      type: mongoose.Schema.Types.String,
+      required: true
+    },
     userIds: {
       type: [mongoose.Schema.Types.String],
       required: true

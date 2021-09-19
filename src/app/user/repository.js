@@ -25,8 +25,8 @@ function findUserByUser (user, { fields } = {}) {
   return User.find({ authorId: user }).select(fields)
 }
 
-function findUserByUserName (user, { fields } = {}) {
-  return User.find({ authorId: user }).select(fields)
+function searchUsersByEmail (email, { fields } = {}) {
+  return User.find({ $text: { $search: email } }).select(fields)
 }
 
 function findUsers ({ ids, fields }) {
@@ -45,7 +45,7 @@ module.exports = {
   findAllUsers,
   findUserById,
   findUserByUser,
-  findUserByUserName,
+  searchUsersByEmail,
   findUsers,
   removeUserById
 }

@@ -10,7 +10,7 @@
  */
 const { queryWishlistItems } = require('@/app/item/wishlist/repository')
 async function searchWishlistItem (req, res) {
-  const { name } = req.body
+  const { name } = req.query
   const wishlistItems = await queryWishlistItems(name)
   res.success({ wishlistItems })
 }

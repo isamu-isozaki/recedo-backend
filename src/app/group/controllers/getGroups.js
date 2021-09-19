@@ -8,10 +8,14 @@
  * All users can find groups people are in
  * Respond group req.user is in
  */
-const { findGroupsByUserId } = require('@/app/group/repository')
+const { findGroupsByUserId, findGroupByInviteId } = require('@/app/group/repository')
+// const { findUsers } = require('@/app/group/repository')
+const _keyBy = require('lodash/keyBy')
+
 async function getGroups (req, res) {
-  const group = await findGroupsByUserId(req.user._id)
-  res.success({ group })
+  const groups = await findGroupsByUserId(req.user._id)
+  const inviteGroups = await findGroupByInviteId(req.user._id)
+  res.success({ groups: _keyBy(groups, '_id'), invitedGroups: _keyBy(inviteGroups, '_id') })
 }
 
 module.exports = { getGroups }

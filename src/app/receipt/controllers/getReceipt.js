@@ -12,7 +12,7 @@ const { findReceiptItems } = require('@/app/item/receipt/repository')
 const { findReceiptById } = require('@/app/receipt/repository')
 const { findGroupById } = require('@/app/group/repository')
 async function getReceipt (req, res) {
-  const { receiptId } = req.body
+  const { receiptId } = req.query
   // TODO: Delete receipt image in firebase
   const receipt = await findReceiptById(receiptId)
   if (!receipt) {

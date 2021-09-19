@@ -41,6 +41,8 @@ router.delete('/item', deleteReceiptItem)
 const { postReceipt } = require('./controllers/postReceipt')
 router.post('/', postReceipt)
 
+const { postReceiptItems } = require('./controllers/postReceiptItems')
+router.post('/item', postReceiptItems)
 // const { postReceipts } = require('./controllers/postReceipts')
 // router.post('/me', postReceipts)
 
