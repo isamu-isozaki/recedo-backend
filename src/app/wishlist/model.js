@@ -11,7 +11,7 @@ const wishlistSchema = new Schema(
       type: mongoose.Schema.Types.String,
       required: true
     },
-    wishlistItems: {
+    wishlistItemIds: {
       type: [mongoose.Schema.Types.String],
       default: []
     }

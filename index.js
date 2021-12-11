@@ -16,7 +16,9 @@ async function startExpressApp () {
   app.use(landingPageCors)
 
   const bodyParser = require('body-parser')
-  app.use(bodyParser.json())
+  app.use(bodyParser.json({
+    limit: '50mb'
+  }))
 
   const cookieParser = require('cookie-parser')
   app.use(cookieParser())

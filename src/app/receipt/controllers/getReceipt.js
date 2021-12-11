@@ -11,6 +11,8 @@
 const { findReceiptItems } = require('@/app/item/receipt/repository')
 const { findReceiptById } = require('@/app/receipt/repository')
 const { findGroupById } = require('@/app/group/repository')
+const _keyBy = require('lodash/keyBy')
+
 async function getReceipt (req, res) {
   const { receiptId } = req.query
   // TODO: Delete receipt image in firebase
@@ -25,7 +27,7 @@ async function getReceipt (req, res) {
     return
   }
   //  Get receipt Items
-  res.success({ receipt: { ...receipt, receiptItems: await findReceiptItems(receipt.receiptItems) } })
+  res.success({ receipt: { ...receipt.toObject(), receiptItems: _keyBy(await findReceiptItems(receipt.receiptItems), '_id') } })
 }
 
 module.exports = { getReceipt }

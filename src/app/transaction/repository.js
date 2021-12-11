@@ -26,7 +26,7 @@ function findTransactionsByFromId (fromId, { fields } = {}) {
 }
 
 function findTransactionsByToId (toId, { fields } = {}) {
-  return Transaction.find({ toId, public: true }).select(fields)
+  return Transaction.find({ toId }).select(fields)
 }
 
 function findTransactions ({ ids, fields }) {

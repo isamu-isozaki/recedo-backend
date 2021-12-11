@@ -12,11 +12,15 @@ const { removeReceiptItemById, findReceiptItemById } = require('@/app/item/recei
 const { findReceiptById, updateReceipt } = require('@/app/receipt/repository')
 const { findGroupById } = require('@/app/group/repository')
 async function deleteReceiptItem (req, res) {
-  const { receiptId, receiptItemId } = req.body
+  const { receiptId, receiptItemId } = req.query
   // TODO: Delete receipt image in firebase
   const receipt = await findReceiptById(receiptId)
   if (!receipt) {
     res.notFound()
+    return
+  }
+  if (receipt.finishedTransaction) {
+    res.unauthorized('Transaction has already been done')
     return
   }
   const group = await findGroupById(receipt.groupId)
@@ -28,10 +32,8 @@ async function deleteReceiptItem (req, res) {
     res.badRequest()
     return
   }
-  const receiptItem = await findReceiptItemById(receiptItemId)
-  const reducedCost = receiptItem.quantity * receiptItem.price
-  updateReceipt(receipt, { totalCost: receipt.totalCost - reducedCost })
-  removeReceiptItemById(receiptItemId)
+  updateReceipt(receipt, { receiptItems: receipt.receiptItems.filter(receiptItem => receiptItem !== receiptItemId) })
+  await removeReceiptItemById(receiptItemId)
   res.success({})
 }
 

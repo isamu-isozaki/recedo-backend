@@ -34,6 +34,10 @@ function findProductNames ({ ids, fields }) {
   return ProductName.find(query).select(fields)
 }
 
+function queryProductNames (name) {
+  return ProductName.find({ $text: { $search: name } }).limit(20)
+}
+
 async function removeProductNameById (productNameId) {
   return ProductName.deleteOne({ _id: productNameId })
 }
@@ -47,5 +51,6 @@ module.exports = {
   findProductNameByIds,
   findProductNameByName,
   findProductNames,
+  queryProductNames,
   removeProductNameById
 }

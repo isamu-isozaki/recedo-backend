@@ -24,8 +24,7 @@ async function getWishlist (req, res) {
     res.unauthorized()
     return
   }
-  //  Get receipt Items
-  res.success({ receipt: { ...wishlist, wishlistItems: await findWishlistItems(wishlist.wishlistItems) } })
+  res.success({ wishlist: { ...wishlist, wishlistItems: await findWishlistItems(wishlist.wishlistItemIds) } })
 }
 
 module.exports = { getWishlist }

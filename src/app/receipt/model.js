@@ -17,9 +17,13 @@ const receiptSchema = new Schema(
       type: mongoose.Schema.Types.String,
       required: true
     },
-    receiptUrl: {
-      type: mongoose.Schema.Types.String,
+    receiptUrls: {
+      type: [mongoose.Schema.Types.String],
       required: true
+    },
+    finishedTransaction: {
+      type: Boolean,
+      default: false
     },
     receiptItems: {
       type: [mongoose.Schema.Types.String],
@@ -27,7 +31,7 @@ const receiptSchema = new Schema(
     },
     totalCost: {
       type: mongoose.Schema.Types.Number,
-      default: 0
+      required: true
     },
     tax: {
       type: mongoose.Schema.Types.Number,

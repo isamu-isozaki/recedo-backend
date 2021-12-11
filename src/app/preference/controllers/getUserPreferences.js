@@ -13,7 +13,7 @@
  * Responds with preferences for user
  */
 const { keyBy } = require('lodash')
-const { findPreferenceByUserId } = require('@/app/preference/repository')
+const { findPreferenceByUserId, findAllPreferences } = require('@/app/preference/repository')
 const { findGroupById } = require('@/app/group/repository')
 
 async function getUserPreferences (req, res) {
@@ -23,7 +23,7 @@ async function getUserPreferences (req, res) {
     res.unauthorized()
     return
   }
-  res.success({ preference: keyBy('wishlistItemId', await findPreferenceByUserId(userId)) })
+  res.success({ preference: keyBy(await findPreferenceByUserId(userId), '_id') })
 }
 
 module.exports = { getUserPreferences }

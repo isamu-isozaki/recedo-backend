@@ -12,7 +12,7 @@ const preferenceSchema = new Schema(
       required: true
     },
     fromTimes: {
-      type: mongoose.Schema.Types.String,
+      type: [mongoose.Schema.Types.Date],
       required: true
     },
     initWant: {

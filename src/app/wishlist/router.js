@@ -12,6 +12,9 @@ router.use(authenticateUser)
 const { getWishlist } = require('./controllers/getWishlist')
 router.get('/', getWishlist)
 
+const { getWishlistItems } = require('./controllers/getWishlistItems')
+router.get('/items', getWishlistItems)
+
 const { getWishlists } = require('./controllers/getWishlists')
 router.get('/me', getWishlists)
 
@@ -40,6 +43,6 @@ const { postWishlist } = require('./controllers/postWishlist')
 router.post('/', postWishlist)
 
 const { postWishlistItem } = require('./controllers/postWishlistItem')
-router.post('/me', postWishlistItem)
+router.post('/item', postWishlistItem)
 
 module.exports = router

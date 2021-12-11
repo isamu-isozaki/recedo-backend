@@ -34,6 +34,4 @@ const receiptItemSchema = new Schema(
     toObject: { versionKey: false }
   }
 )
-receiptItemSchema.index({ name: 'text' })
-
 module.exports = mongoose.model('ReceiptItem', receiptItemSchema)

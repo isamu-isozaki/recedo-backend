@@ -11,10 +11,15 @@
 const { createWishlistItem, findWishlistItemByName } = require('@/app/item/wishlist/repository')
 const { findWishlistById, updateWishlist } = require('@/app/wishlist/repository')
 const { findGroupById } = require('@/app/group/repository')
-const { createPreference, updatePreference, findPreferenceByWishlistItemIdAndUserId } = require('@/app/preference/repository')
+const { createPreference, updatePreference, findPreferenceByWishlistItemIdAndUserId, findPreferenceByUserId } = require('@/app/preference/repository')
 
 async function postWishlistItem (req, res) {
-  const { wishlistId, name } = req.body
+  let { wishlistId, name } = req.body
+  if (!name || name === '') {
+    res.badRequest()
+    return
+  }
+  name = name.toLowerCase()
   const wishlist = await findWishlistById(wishlistId)
   if (!wishlist) {
     res.notFound()
@@ -29,22 +34,28 @@ async function postWishlistItem (req, res) {
   if (!wishlistItem) {
     wishlistItem = await createWishlistItem({ name })
   }
+  let userPreference
+  console.log({userIds: group.userIds})
   for (let i = 0; i < group.userIds.length; i++) {
-    const preference = await findPreferenceByWishlistItemIdAndUserId(wishlistId, group.userIds[i])
+    let preference = await findPreferenceByWishlistItemIdAndUserId(wishlistItem._id, group.userIds[i])
     if (!preference) {
-      await createPreference({ userId: group.userIds[i], wishlistItemId: wishlistItem._id, fromTimes: [wishlist.createdAt] })
+      preference = await createPreference({ userId: group.userIds[i], wishlistItemId: wishlistItem._id, fromTimes: [wishlist.createdAt] })
+    } else if (wishlist.createdAt < preference.fromTimes[0]) {
+      preference = await updatePreference(preference, { fromTimes: [wishlist.createdAt, ...preference.fromTimes.slice(1)] })
     }
-    if (wishlist.createdAt < preference.fromTimes[0]) {
-      await updatePreference(preference, { fromTimes: [wishlist.createdAt, ...preference.fromTimes.slice(1)] })
+    console.log({preference})
+    if (group.userIds[i] === req.user._id) {
+      userPreference = preference
     }
   }
-  const wishlistItems = wishlist.wishlistItems
-  if (wishlistItems.includes(wishlistItem._id)) {
+  const wishlistItemIds = wishlist.wishlistItemIds
+  if (wishlistItemIds.includes(wishlistItem._id)) {
     res.success({ wishlistItem })
     return
   }
-  updateWishlist(wishlist, { wishlistItems: [...wishlistItems, wishlistItem._id] })
-  res.success({ wishlistItem })
+  await updateWishlist(wishlist, { wishlistItemIds: [...wishlistItemIds, wishlistItem._id] })
+
+  res.success({ wishlistItem, preference: userPreference })
 }
 
 module.exports = { postWishlistItem }
