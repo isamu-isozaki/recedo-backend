@@ -25,15 +25,19 @@ function findPreferenceByWishlistId (wishlistItemId, { fields } = {}) {
   return Preference.find({ wishlistItemId }).select(fields)
 }
 
+function findPreferenceByUserId (userId, { fields } = {}) {
+  return Preference.find({ userId }).select(fields)
+}
+
 function findPreferenceByWishlistItemIdAndUserId (wishlistItemId, userId, { fields } = {}) {
-  return Preference.find({ wishlistItemId, userId }).select(fields)
+  return Preference.findOne({ wishlistItemId, userId }).select(fields)
 }
 
 function findPreferencesByWishlistItemIds (wishlistItemIds, { fields } = {}) {
   return Preference.find({ wishlistItemId: { $in: wishlistItemIds } }).select(fields)
 }
 
-function findPreferencesByWishlistItemIdAndUserIds (wishlistItemIds, userIds, { fields } = {}) {
+function findPreferencesByWishlistItemIdsAndUserIds (wishlistItemIds, userIds, { fields } = {}) {
   return Preference.find({ wishlistItemId: { $in: wishlistItemIds }, userId: { $in: userIds } }).select(fields)
 }
 
@@ -53,8 +57,9 @@ module.exports = {
   findAllPreferences,
   findPreferenceById,
   findPreferenceByWishlistId,
+  findPreferenceByUserId,
   findPreferenceByWishlistItemIdAndUserId,
-  findPreferencesByWishlistItemIdAndUserIds,
+  findPreferencesByWishlistItemIdsAndUserIds,
   findPreferences,
   findPreferencesByWishlistItemIds,
   removePreferenceById

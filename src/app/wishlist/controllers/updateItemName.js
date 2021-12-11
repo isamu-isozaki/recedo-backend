@@ -13,7 +13,8 @@ const { findWishlistById, updateWishlist } = require('@/app/wishlist/repository'
 const { findGroupById } = require('@/app/group/repository')
 
 async function updateItemName (req, res) {
-  const { wishlistId, wishlistItemId, newName } = req.body
+  let { wishlistId, wishlistItemId, newName } = req.body
+  newName = newName.lower()
   const wishlist = await findWishlistById(wishlistId)
   if (!wishlist) {
     res.notFound()
@@ -24,7 +25,7 @@ async function updateItemName (req, res) {
     res.unauthorized()
     return
   }
-  if (!wishlist.wishlistItems.includes(wishlistItemId)) {
+  if (!wishlist.wishlistItemIds.includes(wishlistItemId)) {
     res.unauthorized()
     return
   }
@@ -32,12 +33,12 @@ async function updateItemName (req, res) {
   if (!wishlistItem) {
     wishlistItem = await createWishlistItem({ name: newName })
   }
-  const wishlistItems = wishlist.wishlistItems
-  if (wishlistItems.includes(wishlistItem._id)) {
+  const wishlistItemIds = wishlist.wishlistItemIds
+  if (wishlistItemIds.includes(wishlistItem._id)) {
     res.success({ wishlistItem })
     return
   }
-  updateWishlist(wishlistItem, { wishlistItems: [...wishlistItems.filter(item => item !== wishlistItemId), wishlistItem._id] })
+  updateWishlist(wishlistItem, { wishlistItemIds: [...wishlistItemIds.filter(item => item !== wishlistItemId), wishlistItem._id] })
   res.success({ wishlistItem })
 }
 

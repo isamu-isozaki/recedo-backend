@@ -26,6 +26,10 @@ function findWishlists (ids, { fields } = {}) {
   return Wishlist.find(query).select(fields)
 }
 
+function findWishlistsByGroupId (groupId, { fields } = {}) {
+  return Wishlist.find({ groupId }).select(fields)
+}
+
 function findWishlistsByGroupIds (groupIds, { fields } = {}) {
   const query = { groupId: { $in: groupIds } }
   return Wishlist.find(query).select(fields)
@@ -51,7 +55,6 @@ async function removeWishlistById (wishlistId) {
   return Wishlist.deleteOne({ _id: wishlistId })
 }
 
-
 module.exports = {
   createWishlist,
   updateWishlist,
@@ -63,6 +66,7 @@ module.exports = {
   findWishlistsByTimeBegin,
   findWishlistsByTimeRangeAndGroupIds,
   findWishlistsByTimeBeginAndGroupIds,
+  findWishlistsByGroupId,
   findWishlistsByGroupIds,
   removeWishlistById,
 }

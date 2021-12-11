@@ -8,48 +8,70 @@
  * @param {object} res response
  * Respond with receipt. Creates receipt
  */
+const fs = require('fs')
 const firebase = require('@/services/firebase')
+const { BUCKET_NAME } = require('@/config')
 const { createReceipt } = require('@/app/receipt/repository')
 const { findGroupById } = require('@/app/group/repository')
 const { findWishlistById } = require('@/app/wishlist/repository')
-const { createTransaction } = require('@/app/transaction/repository')
+const { conductTaxTransaction } = require('@/app/transaction/utils')
+const { findReceiptItems } = require('@/app/item/receipt/repository')
+const _keyBy = require('lodash/keyBy')
+const { TEMP_DIR } = require('../../../config')
+const multiparty = require('multiparty')
 
 async function postReceipt (req, res) {
-  const { payerId, wishlistId, receiptImg, tax } = req.body
-  if (payerId !== req.user._id) {
-    // If user is not part of the group
-    res.unauthorized()
-    return
-  }
+  const form = new multiparty.Form()
+  const fields = {}
+  let receiptUrls = []
+
+  form.on('part', (part) => {
+    if (!part.filename) {
+      part.on('data', chunk => {
+        fields[part.name] = chunk.toString()
+      })
+    }
+    if (part.filename) {
+      const fileName = require('crypto').randomBytes(32).toString('hex')
+
+      const receiptUrl = `${fileName}.jpg`
+      const writeStream = fs.createWriteStream(`${TEMP_DIR}/${receiptUrl}`)
+      part.on('data', chunk => {
+        writeStream.write(chunk)
+      })
+
+      part.on('end', chunk => {
+        console.log('File writing done!')
+        writeStream.end(chunk)
+      })
+      receiptUrls = [...receiptUrls, receiptUrl]
+      createReceiptFromForm(req, res, fields, receiptUrls)
+      return
+    }
+    part.resume()
+  })
+  form.on('error', (err) => {
+    console.log({ err })
+  })
+  form.parse(req)
+}
+
+async function createReceiptFromForm (req, res, fields, receiptUrls) {
+  const { payerId, wishlistId, totalCost, tax } = fields
+
   const wishlist = await findWishlistById(wishlistId)
   if (!wishlist) {
     res.unauthorized()
     return
   }
   const group = await findGroupById(wishlist.groupId)
-  if (!group || !group.userIds.includes(payerId)) {
+  if (!group || !group.userIds.includes(payerId) || !group.userIds.includes(req.user._id)) {
     res.unauthorized()
     return
   }
-  const storageRef = firebase.storage().ref()
-  const fileName = require('crypto').randomBytes(48, function (_err, buffer) {
-    return buffer.toString('hex')
-  })
-  // Create a reference to 'mountains.jpg'
-  const imgRef = storageRef.child(`imgs/${fileName}.jpg`)
-  // Assume receiptImg is a blob
-  imgRef.put(receiptImg)
-  // If userId is not invited in the first place, bad request
-  const receipt = await createReceipt({ payerId, wishlistId, receiptUrl: `imgs/${fileName}.jpg`, tax: tax })
-  const groupSize = group.userIds.length
-  const taxPayAmount = tax / groupSize
-  for (let i = 0; i < groupSize; i++) {
-    const userId = group.userIds[i]
-    if (userId !== payerId) {
-      await createTransaction({ fromId: payerId, groupId: group._id, toId: userId, amount: -taxPayAmount })
-    }
-  }
-  res.success({ receipt })
+  const receipt = await createReceipt({ payerId, wishlistId, receiptUrls, tax, totalCost, groupId: group._id })
+  conductTaxTransaction(group, receipt, wishlist)
+  res.success({ receipt: { ...receipt.toObject(), receiptItems: _keyBy(await findReceiptItems(receipt.receiptItems), '_id') } })
 }
 
 module.exports = { postReceipt }

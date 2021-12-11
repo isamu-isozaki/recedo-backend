@@ -20,8 +20,8 @@ async function postWishlist (req, res) {
   }
 
   // If userId is not invited in the first place, bad request
-  const receipt = await createWishlist({ name, groupId })
-  res.success({ receipt })
+  const wishlist = await createWishlist({ name, groupId })
+  res.success({ wishlist })
 }
 
 module.exports = { postWishlist }

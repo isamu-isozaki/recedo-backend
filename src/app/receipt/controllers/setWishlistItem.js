@@ -17,10 +17,15 @@ const { conductTransaction } = require('@/app/transaction/utils')
 
 async function setWishlistItem (req, res) {
   const { receiptItemId, wishlistItemId } = req.body
+  console.log('set wishlist item')
   // TODO: Delete receipt image in firebase
   const receipt = await findReceiptByReceiptItemId(receiptItemId)
   if (!receipt) {
     res.notFound()
+    return
+  }
+  if (receipt.finishedTransaction) {
+    res.unauthorized('Transaction has already been done')
     return
   }
   const group = await findGroupById(receipt.groupId)
@@ -33,10 +38,10 @@ async function setWishlistItem (req, res) {
     res.notFound()
     return
   }
+  console.log('running transactions')
   const receiptItem = await updateReceiptItemById(receiptItemId, { wishlistItemId, wishlistItemSet: true })
   //  Get receipt Items. If all receiptItems are set, then proceed to make all transactions.
   const receiptItems = await findReceiptItems(receipt.receiptItems)
-
   const transaction = await conductTransaction(receiptItems, group, receipt.wishlistId, receipt)
   if (!transaction) {
     res.badRequest("At least one item didn't have someone paying for it")

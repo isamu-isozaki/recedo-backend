@@ -22,6 +22,9 @@ router.put('/invite', inviteMembers)
 const { cancelInvite } = require('./controllers/cancelInvite')
 router.put('/cancelInvite', cancelInvite)
 
+const { acceptInvite } = require('./controllers/acceptInvite')
+router.put('/acceptInvite', acceptInvite)
+
 const { kickMember } = require('./controllers/kickMember')
 router.put('/kick', kickMember)
 
@@ -32,6 +35,6 @@ router.put('/leave', leaveGroup)
   * Post
   */
 const { postGroup } = require('./controllers/postGroup')
-router.put('/', postGroup)
+router.post('/', postGroup)
 
 module.exports = router

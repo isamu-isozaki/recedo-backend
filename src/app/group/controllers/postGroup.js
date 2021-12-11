@@ -9,8 +9,9 @@
  */
 const { createGroup } = require('@/app/group/repository')
 async function postGroup (req, res) {
-  const { invitedUserIds } = req.body
-  const group = await createGroup({ userIds: [req.user], invitedUserIds })
+  const { name, invitedUserIds } = req.body
+  // TODO: restrict group names to unique
+  const group = await createGroup({ name: name, userIds: [req.user._id], invitedUserIds })
   res.success({ group })
 }
 

@@ -7,5 +7,7 @@ module.exports = {
   DB_URI: process.env.DB_URI,
   DB_USER: process.env.DB_USER,
   DB_PASSWORD: process.env.DB_PASSWORD,
-  API_URL: process.env.API_URL
+  API_URL: process.env.API_URL,
+  BUCKET_NAME: process.env.BUCKET_NAME,
+  TEMP_DIR: process.env.TEMP_DIR
 }

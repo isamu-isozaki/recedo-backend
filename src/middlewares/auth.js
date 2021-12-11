@@ -32,13 +32,13 @@ async function attachUser (req, res, next) {
     if (!req.user) {
       req.user = await createUser({
         _id: decoded.user_id,
-        email: decoded.email,
-        name: decoded.name
+        email: decoded.email
       })
     }
 
     next()
   } catch (err) {
+    console.log(err);
     next()
   }
 }

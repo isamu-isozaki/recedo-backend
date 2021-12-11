@@ -12,6 +12,10 @@ const { updateGroup, findGroupById, removeGroupById } = require('@/app/group/rep
 async function leaveGroup (req, res) {
   const { groupId } = req.body
   const group = await findGroupById(groupId)
+  if (!group) {
+    res.unauthorized()
+    return
+  }
   if (!group.userIds.includes(req.user._id)) {
     // If user is not part of the group
     res.unauthorized()

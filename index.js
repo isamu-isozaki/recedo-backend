@@ -12,12 +12,13 @@ async function startApp () {
 async function startExpressApp () {
   const express = require('express')
   const app = express()
-
   const { landingPageCors } = require('@/middlewares/cors')
   app.use(landingPageCors)
 
   const bodyParser = require('body-parser')
-  app.use(bodyParser.json())
+  app.use(bodyParser.json({
+    limit: '50mb'
+  }))
 
   const cookieParser = require('cookie-parser')
   app.use(cookieParser())
