@@ -1,14 +1,9 @@
 const mongoose = require('mongoose')
-const { DB_URI, DB_USER, DB_PASSWORD } = require('@/config')
-
-const options = {
-  user: DB_USER,
-  pass: DB_PASSWORD
-}
+const { DB_URI } = require('@/config')
 
 async function connect () {
   console.log('[db] Connecting to database...')
-  await mongoose.connect(DB_URI, options)
+  await mongoose.connect(DB_URI)
   console.log('[db] Database connection established')
 }
 
