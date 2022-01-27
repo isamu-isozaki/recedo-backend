@@ -34,7 +34,11 @@ async function startExpressApp () {
     res.serverError()
   })
 
-  app.use((req, res) => res.notFound())
+  app.use((req, res) => {
+    const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    console.log({fullUrl})
+    res.notFound()
+  })
 
   app.listen(APP_PORT, () => {
     console.log(`Server listening on port ${APP_PORT}`)
