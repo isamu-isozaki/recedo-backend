@@ -69,6 +69,10 @@ async function createReceiptFromForm (req, res, fields, receiptUrls) {
     res.unauthorized()
     return
   }
+  if (totalCost <= tax || totalCost <= -tax) {
+    res.unauthorized()
+    return
+  }
   const receipt = await createReceipt({ payerId, wishlistId, receiptUrls, tax, totalCost, groupId: group._id })
   conductTaxTransaction(group, receipt, wishlist)
   res.success({ receipt: { ...receipt.toObject(), receiptItems: _keyBy(await findReceiptItems(receipt.receiptItems), '_id') } })

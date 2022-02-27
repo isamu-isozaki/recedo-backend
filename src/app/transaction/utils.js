@@ -1,9 +1,31 @@
-const { createTransaction } = require('@/app/transaction/repository')
+const { createTransaction, findTransactionsByFromIdToToId } = require('@/app/transaction/repository')
 const { findPreferencesByWishlistItemIdsAndUserIds, findAllPreferences } = require('@/app/preference/repository')
 const { findWishlistItemById } = require('@/app/item/wishlist/repository')
 const { findUserById } = require('@/app/user/repository')
 const { findWishlistById } = require('@/app/wishlist/repository')
 
+async function canLeave (userId, group) {
+  // Check if user doesn't have any debts to the rest of the group
+  let output = true
+  await Promise.all(group.userIds.map(async groupUserId => {
+    let amountOwed = 0
+    if (groupUserId !== userId) {
+      const fromUserToGroupUser = await findTransactionsByFromIdToToId(userId, groupUserId)
+      fromUserToGroupUser.forEach(transaction => {
+        amountOwed -= transaction.amount
+      })
+      const toUserFromGroupUser = await findTransactionsByFromIdToToId(groupUserId, userId)
+      toUserFromGroupUser.forEach(transaction => {
+        amountOwed += transaction.amount
+      })
+    }
+    if (amountOwed.toFixed(2) > 0) {
+      output = false
+    }
+    return output
+  }))
+  return output
+}
 // TODO: Limit the number of transactions to 100 by combining the oldest ones.
 async function conductTransaction (receiptItems, group, wishlistId, receipt, cancel = false) {
   // Conduct transaction only when it hasn't been done before. ONLY ONCE
@@ -13,8 +35,9 @@ async function conductTransaction (receiptItems, group, wishlistId, receipt, can
     allSet = receiptItems[i].wishlistItemSet
     totalCost += receiptItems[i].price * receiptItems[i].quantity
   }
+  totalCost = totalCost.toFixed(2)
   // check if receipt's total cost== sum of receipt items
-  if (allSet && receiptItems.length > 0 && totalCost === receipt.totalCost) {
+  if (allSet && receiptItems.length > 0 && totalCost === receipt.totalCost.toFixed(2)) {
     // Make it so receipt's items can't be updated anymore
     if (!receipt.finishedTransaction) {
       receipt.finishedTransaction = true
@@ -208,4 +231,4 @@ async function updateReceiptAndTaxTransaction (group, receipt, wishlist, updates
   }
   conductTaxTransaction(group, { ...receipt.toObject(), ...updates }, wishlist)
 }
-module.exports = { conductTransaction, reconductTransactionsFromMultipleReceiptItems, cancelTaxTransaction, conductTaxTransaction, updateReceiptAndTaxTransaction }
+module.exports = { conductTransaction, canLeave, reconductTransactionsFromMultipleReceiptItems, cancelTaxTransaction, conductTaxTransaction, updateReceiptAndTaxTransaction }

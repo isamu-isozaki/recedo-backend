@@ -17,7 +17,6 @@ const { conductTransaction } = require('@/app/transaction/utils')
 
 async function setWishlistItem (req, res) {
   const { receiptItemId, wishlistItemId } = req.body
-  console.log('set wishlist item')
   // TODO: Delete receipt image in firebase
   const receipt = await findReceiptByReceiptItemId(receiptItemId)
   if (!receipt) {
@@ -38,7 +37,6 @@ async function setWishlistItem (req, res) {
     res.notFound()
     return
   }
-  console.log('running transactions')
   const receiptItem = await updateReceiptItemById(receiptItemId, { wishlistItemId, wishlistItemSet: true })
   //  Get receipt Items. If all receiptItems are set, then proceed to make all transactions.
   const receiptItems = await findReceiptItems(receipt.receiptItems)

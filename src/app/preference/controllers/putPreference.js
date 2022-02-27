@@ -30,7 +30,6 @@ async function putPreference (req, res) {
   // Nullify all previous interactions within range
   async function switchPreference (timeBegin, timeEnd, userId, wishlistItemId) {
     const { receiptItems } = await findReceiptItemsAffectedByPreferenece(timeBegin, timeEnd, userId, wishlistItemId)
-    console.log('reconducting transation')
     return reconductTransactionsFromMultipleReceiptItems(receiptItems, group, userId, wishlistItemId)
   }
 

@@ -35,7 +35,6 @@ async function postWishlistItem (req, res) {
     wishlistItem = await createWishlistItem({ name })
   }
   let userPreference
-  console.log({userIds: group.userIds})
   for (let i = 0; i < group.userIds.length; i++) {
     let preference = await findPreferenceByWishlistItemIdAndUserId(wishlistItem._id, group.userIds[i])
     if (!preference) {
@@ -43,7 +42,6 @@ async function postWishlistItem (req, res) {
     } else if (wishlist.createdAt < preference.fromTimes[0]) {
       preference = await updatePreference(preference, { fromTimes: [wishlist.createdAt, ...preference.fromTimes.slice(1)] })
     }
-    console.log({preference})
     if (group.userIds[i] === req.user._id) {
       userPreference = preference
     }

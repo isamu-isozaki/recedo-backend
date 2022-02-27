@@ -14,8 +14,7 @@ const { updateReceiptItem, findReceiptItemById } = require('@/app/item/receipt/r
 
 async function updateItemQuantity (req, res) {
   const { receiptItemId, quantity } = req.body
-  // TODO: Delete receipt image in firebase
-  if (Math.floor(quantity) !== quantity || quantity <= 0) {
+  if (quantity <= 0) {
     res.badRequest(`Quantity is invalid. Quantity: ${quantity}`)
     return
   }

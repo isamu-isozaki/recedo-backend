@@ -29,6 +29,10 @@ function findTransactionsByToId (toId, { fields } = {}) {
   return Transaction.find({ toId }).select(fields)
 }
 
+function findTransactionsByFromIdToToId (fromId, toId, { fields } = {}) {
+  return Transaction.find({ fromId, toId }).select(fields)
+}
+
 function findTransactions ({ ids, fields }) {
   const query = { _id: { $in: ids } }
   return Transaction.find(query).select(fields)
@@ -46,6 +50,7 @@ module.exports = {
   findTransactionById,
   findTransactionsByFromId,
   findTransactionsByToId,
+  findTransactionsByFromIdToToId,
   findTransactions,
   removeTransactionById
 }
