@@ -16,7 +16,6 @@ const _keyBy = require('lodash/keyBy')
 async function getReceipts (req, res) {
   // TODO: Limit number of receipts. From certain point don't load the receiptItems
   const groups = await findGroupsByUserId(req.user._id)
-  // console.log({groups})
   const rawReceipts = await findReceiptsByGroupIds(groups.map(group => group._id))
   const receipts = await Promise.all(
     rawReceipts.map(
