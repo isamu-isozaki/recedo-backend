@@ -33,7 +33,7 @@ async function conductTransaction (receiptItems, group, wishlistId, receipt, can
   let totalCost = 0
   for (let i = 0; i < receiptItems.length && allSet; i++) {
     allSet = receiptItems[i].wishlistItemSet
-    totalCost += receiptItems[i].price * receiptItems[i].quantity
+    totalCost += Number((receiptItems[i].price * receiptItems[i].quantity).toFixed(2))
   }
   totalCost = totalCost.toFixed(2)
   // check if receipt's total cost== sum of receipt items
@@ -77,7 +77,7 @@ async function conductTransaction (receiptItems, group, wishlistId, receipt, can
       if (numUsers === 0) {
         return false
       }
-      const pricePerUser = item.price * item.quantity / numUsers
+      const pricePerUser = Number((item.price * item.quantity).toFixed(2)) / numUsers
       for (let i = 0; i < numUsers; i++) {
         amountPerUser[itemUsers[i]] += pricePerUser
       }
