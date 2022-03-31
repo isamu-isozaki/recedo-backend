@@ -12,9 +12,11 @@ Description: // Get wishlist, wishlistItemIds
  * Get receipt
  */
 const { findWishlistItems } = require('@/app/item/wishlist/repository')
+const sanitize = require('mongo-sanitize')
 
 const _keyBy = require('lodash/keyBy')
 async function getWishlistItems (req, res) {
+  sanitize(req.query)
   const { wishlistItemIds } = req.query
 
   const wishlistItems = await findWishlistItems(wishlistItemIds)

@@ -1,7 +1,6 @@
 const ReceiptItem = require('./model')
 const { createProductName, findProductNameByName } = require('@/app/item/productName/repository')
 
-
 async function createReceiptItem (data) {
   const name = data.name
   let product = await findProductNameByName(name)
@@ -22,6 +21,10 @@ function updateReceiptItemById (receiptItemId, updates) {
 
 function findAllReceiptItems () {
   return ReceiptItem.find({})
+}
+
+function findReceiptItemByName (name, { fields } = {}) {
+  return ReceiptItem.find({ name }).select(fields)
 }
 
 function findReceiptItemById (receiptItemId, { fields } = {}) {
@@ -64,6 +67,7 @@ module.exports = {
   findReceiptItemByWishlistItemId,
   findReceiptItemsByIdsAndWishlistItemId,
   findReceiptItems,
+  findReceiptItemByName,
   removeReceiptItemById,
   removeReceiptItemByReceipt
 }

@@ -10,8 +10,10 @@
  */
 const { findUserById } = require('@/app/user/repository')
 const { createTransaction } = require('@/app/transaction/repository')
+const sanitize = require('mongo-sanitize')
 
 async function pay (req, res) {
+  sanitize(req.body)
   const { toId, amount, message } = req.body
   const to = await findUserById(toId)
   if (!to) {

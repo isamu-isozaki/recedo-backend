@@ -8,7 +8,10 @@
  * Respond with created group
  */
 const { updateGroup, findGroupById } = require('@/app/group/repository')
+const sanitize = require('mongo-sanitize')
+
 async function cancelInvite (req, res) {
+  sanitize(req.body)
   const { groupId, userId } = req.body
   const group = await findGroupById(groupId)
   if (!group.userIds.includes(req.user._id) && !group.invitedUserIds.includes(userId)) {

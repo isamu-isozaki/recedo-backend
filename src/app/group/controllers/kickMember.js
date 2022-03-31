@@ -8,7 +8,11 @@
  * Respond with created group
  */
 const { updateGroup, findGroupById } = require('@/app/group/repository')
+const sanitize = require('mongo-sanitize')
+
 async function kickMember (req, res) {
+  sanitize(req.body)
+
   const { userId, groupId } = req.body
   const group = await findGroupById(groupId)
   if (userId === req.user._id) {
