@@ -8,8 +8,10 @@ Modified By: modifier
 
 const { searchUsersByEmail } = require('@/app/user/repository')
 const _keyBy = require('lodash/keyBy')
+const sanitize = require('mongo-sanitize')
 
 async function getUsersByEmail (req, res) {
+  sanitize(req.query)
   const { email } = req.query
   let users = []
   if (email) {

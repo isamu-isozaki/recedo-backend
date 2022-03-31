@@ -2,6 +2,7 @@
  * Author: Isamu Isozaki
  */
 const { findUserByUsername, updateUser } = require('@/app/user/repository')
+const sanitize = require('mongo-sanitize')
 
 /**
  *
@@ -10,6 +11,7 @@ const { findUserByUsername, updateUser } = require('@/app/user/repository')
  * Updates user with non-null parts of user in req.body. Respond with key user in req.user
  */
 async function putCurrentUser (req, res) {
+  sanitize(req.body)
   const { user: userUpdates } = req.body
 
   if (userUpdates.userName && req.user.userName !== userUpdates.userName) {

@@ -11,8 +11,10 @@
 const { createWishlistItem, findWishlistItemByName } = require('@/app/item/wishlist/repository')
 const { findWishlistById, updateWishlist } = require('@/app/wishlist/repository')
 const { findGroupById } = require('@/app/group/repository')
+const sanitize = require('mongo-sanitize')
 
 async function updateItemName (req, res) {
+  sanitize(req.body)
   let { wishlistId, wishlistItemId, newName } = req.body
   newName = newName.lower()
   const wishlist = await findWishlistById(wishlistId)

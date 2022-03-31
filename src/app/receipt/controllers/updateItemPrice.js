@@ -11,8 +11,10 @@
 const { findGroupById } = require('@/app/group/repository')
 const { findReceiptByReceiptItemId, updateReceipt } = require('@/app/receipt/repository')
 const { updateReceiptItem, findReceiptItemById } = require('@/app/item/receipt/repository')
+const sanitize = require('mongo-sanitize')
 
 async function updateItemPrice (req, res) {
+  sanitize(req.body)
   const { receiptItemId, price } = req.body
   // TODO: Delete receipt image in firebase
   if (price <= 0) {

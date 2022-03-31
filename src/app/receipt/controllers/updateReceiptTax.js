@@ -14,8 +14,10 @@ const { findReceiptById } = require('@/app/receipt/repository')
 const { findWishlistById } = require('@/app/wishlist/repository')
 const { updateReceiptAndTaxTransaction } = require('@/app/transaction/utils')
 const { updateReceipt } = require('@/app/receipt/repository')
+const sanitize = require('mongo-sanitize')
 
 async function updateReceiptTax (req, res) {
+  sanitize(req.body)
   const { receiptId, tax } = req.body
   // TODO: Delete receipt image in firebase
   const receipt = await findReceiptById(receiptId)

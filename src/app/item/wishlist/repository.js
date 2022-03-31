@@ -1,8 +1,12 @@
 const WishlistItem = require('./model')
 const { findWishlistById } = require('@/app/wishlist/repository')
 
-function createWishlistItem (data) {
-  return WishlistItem.create(data)
+async function createWishlistItem ({ name }) {
+  const wishlistItem = await findWishlistItemByName(name)
+  if (!wishlistItem) {
+    return await WishlistItem.create({ name })
+  }
+  return wishlistItem
 }
 
 function updateWishlistItem (wishlistItem, updates) {

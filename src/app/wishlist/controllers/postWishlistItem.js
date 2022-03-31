@@ -11,9 +11,11 @@
 const { createWishlistItem, findWishlistItemByName } = require('@/app/item/wishlist/repository')
 const { findWishlistById, updateWishlist } = require('@/app/wishlist/repository')
 const { findGroupById } = require('@/app/group/repository')
-const { createPreference, updatePreference, findPreferenceByWishlistItemIdAndUserId, findPreferenceByUserId } = require('@/app/preference/repository')
+const {setPreferencesForWishlistItem} = require('@/app/wishlist/utils')
+const sanitize = require('mongo-sanitize')
 
 async function postWishlistItem (req, res) {
+  sanitize(req.body)
   let { wishlistId, name } = req.body
   if (!name || name === '') {
     res.badRequest()
@@ -30,22 +32,8 @@ async function postWishlistItem (req, res) {
     res.unauthorized()
     return
   }
-  let wishlistItem = await findWishlistItemByName(name)
-  if (!wishlistItem) {
-    wishlistItem = await createWishlistItem({ name })
-  }
-  let userPreference
-  for (let i = 0; i < group.userIds.length; i++) {
-    let preference = await findPreferenceByWishlistItemIdAndUserId(wishlistItem._id, group.userIds[i])
-    if (!preference) {
-      preference = await createPreference({ userId: group.userIds[i], wishlistItemId: wishlistItem._id, fromTimes: [wishlist.createdAt] })
-    } else if (wishlist.createdAt < preference.fromTimes[0]) {
-      preference = await updatePreference(preference, { fromTimes: [wishlist.createdAt, ...preference.fromTimes.slice(1)] })
-    }
-    if (group.userIds[i] === req.user._id) {
-      userPreference = preference
-    }
-  }
+  const wishlistItem = await createWishlistItem({ name })
+  const userPreference = await setPreferencesForWishlistItem(group, wishlist, wishlistItem, req)
   const wishlistItemIds = wishlist.wishlistItemIds
   if (wishlistItemIds.includes(wishlistItem._id)) {
     res.success({ wishlistItem })

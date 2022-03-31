@@ -11,7 +11,10 @@
 const { findWishlistItems } = require('@/app/item/wishlist/repository')
 const { findWishlistById } = require('@/app/wishlist/repository')
 const { findGroupById } = require('@/app/group/repository')
+const sanitize = require('mongo-sanitize')
+
 async function getWishlist (req, res) {
+  sanitize(req.query)
   const { wishlistId } = req.query
   // TODO: Delete receipt image in firebase
   const wishlist = await findWishlistById(wishlistId)

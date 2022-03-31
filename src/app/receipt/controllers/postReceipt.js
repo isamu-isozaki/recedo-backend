@@ -19,6 +19,7 @@ const { findReceiptItems } = require('@/app/item/receipt/repository')
 const _keyBy = require('lodash/keyBy')
 const { TEMP_DIR } = require('../../../config')
 const multiparty = require('multiparty')
+const sanitize = require('mongo-sanitize')
 
 async function postReceipt (req, res) {
   const form = new multiparty.Form()
@@ -57,20 +58,23 @@ async function postReceipt (req, res) {
 }
 
 async function createReceiptFromForm (req, res, fields, receiptUrls) {
-  const { payerId, wishlistId, totalCost, tax } = fields
-
+  sanitize(fields)
+  const { payerId, wishlistId } = fields
+  let { totalCost, tax } = fields
+  totalCost = parseFloat(totalCost)
+  tax = parseFloat(tax)
   const wishlist = await findWishlistById(wishlistId)
   if (!wishlist) {
-    res.unauthorized()
+    res.notFound('Wishlist failed to be found')
     return
   }
   const group = await findGroupById(wishlist.groupId)
   if (!group || !group.userIds.includes(payerId) || !group.userIds.includes(req.user._id)) {
-    res.unauthorized()
+    res.unauthorized('You aren\'t a member of this group')
     return
   }
   if (totalCost <= tax || totalCost <= -tax) {
-    res.unauthorized()
+    res.badRequest('Total cost is less than tax')
     return
   }
   const receipt = await createReceipt({ payerId, wishlistId, receiptUrls, tax, totalCost, groupId: group._id })

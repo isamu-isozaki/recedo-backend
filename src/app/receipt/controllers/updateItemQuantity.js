@@ -11,8 +11,10 @@
 const { findGroupById } = require('@/app/group/repository')
 const { findReceiptByReceiptItemId, updateReceipt } = require('@/app/receipt/repository')
 const { updateReceiptItem, findReceiptItemById } = require('@/app/item/receipt/repository')
+const sanitize = require('mongo-sanitize')
 
 async function updateItemQuantity (req, res) {
+  sanitize(req.body)
   const { receiptItemId, quantity } = req.body
   if (quantity <= 0) {
     res.badRequest(`Quantity is invalid. Quantity: ${quantity}`)

@@ -8,8 +8,12 @@
  * Respond with created group
  */
 const { updateGroup, findGroupById } = require('@/app/group/repository')
+const sanitize = require('mongo-sanitize')
+
 async function inviteMembers (req, res) {
+  sanitize(req.body)
   const { groupId, invitedUserIds } = req.body
+
   if (!invitedUserIds) {
     res.badRequest('invalid type for invited user ids')
     return

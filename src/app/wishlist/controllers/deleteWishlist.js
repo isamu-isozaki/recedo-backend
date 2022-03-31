@@ -12,7 +12,10 @@
 const { removeWishlistById, findWishlistById } = require('@/app/wishlist/repository')
 const { findReceiptByWishlistId, removeReceipt } = require('@/app/receipt/repository')
 const { findGroupById } = require('@/app/group/repository')
+const sanitize = require('mongo-sanitize')
+
 async function deleteWishlist (req, res) {
+  sanitize(req.query)
   const { wishlistId } = req.query
 
   const wishlist = await findWishlistById(wishlistId)

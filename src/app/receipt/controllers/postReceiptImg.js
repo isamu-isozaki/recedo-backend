@@ -5,6 +5,7 @@ const multiparty = require('multiparty')
 const { findGroupById } = require('@/app/group/repository')
 const { findReceiptItems } = require('@/app/item/receipt/repository')
 const _keyBy = require('lodash/keyBy')
+const sanitize = require('mongo-sanitize')
 
 async function postReceiptImg (req, res) {
   const form = new multiparty.Form()
@@ -43,6 +44,7 @@ async function postReceiptImg (req, res) {
 }
 
 async function updateReceiptImgsFromForm (req, res, fields, receiptUrls) {
+  sanitize(fields)
   const { receiptId } = fields
 
   const receipt = await findReceiptById(receiptId)

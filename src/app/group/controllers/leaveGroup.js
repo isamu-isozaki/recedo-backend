@@ -10,7 +10,10 @@
  */
 const { updateGroup, findGroupById, removeGroupById } = require('@/app/group/repository')
 const { canLeave } = require('@/app/transaction/utils')
+const sanitize = require('mongo-sanitize')
+
 async function leaveGroup (req, res) {
+  sanitize(req.body)
   const { groupId } = req.body
   const group = await findGroupById(groupId)
   if (!group) {

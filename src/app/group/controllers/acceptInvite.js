@@ -8,7 +8,9 @@
  * Respond with created group
  */
 const { updateGroup, findGroupById } = require('@/app/group/repository')
+const sanitize = require('mongo-sanitize')
 async function acceptInvite (req, res) {
+  sanitize(req.body)
   const { groupId } = req.body
   const group = await findGroupById(groupId)
   const userId = req.user._id

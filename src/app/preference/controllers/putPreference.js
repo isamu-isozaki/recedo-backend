@@ -3,8 +3,11 @@ const { findWishlistById } = require('@/app/wishlist/repository')
 const { findGroupById } = require('@/app/group/repository')
 const { findReceiptItemsAffectedByPreferenece } = require('@/app/receipt/repository')
 const { reconductTransactionsFromMultipleReceiptItems } = require('@/app/transaction/utils')
+const sanitize = require('mongo-sanitize')
 
 async function putPreference (req, res) {
+  sanitize(req.body)
+
   const { wishlistId, wishlistItemId, want } = req.body
   const userId = req.user._id
   const preference = await findPreferenceByWishlistItemIdAndUserId(wishlistItemId, req.user._id)

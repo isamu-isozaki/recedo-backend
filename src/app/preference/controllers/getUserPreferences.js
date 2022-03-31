@@ -15,8 +15,11 @@
 const { keyBy } = require('lodash')
 const { findPreferenceByUserId, findAllPreferences } = require('@/app/preference/repository')
 const { findGroupById } = require('@/app/group/repository')
+const sanitize = require('mongo-sanitize')
 
 async function getUserPreferences (req, res) {
+  sanitize(req.query)
+
   const { groupId, userId } = req.query
   const group = await findGroupById(groupId)
   if (!group.userIds.includes(userId) || !group.userIds.includes(req.user._id)) {
