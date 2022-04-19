@@ -51,7 +51,8 @@ async function postReceiptItem (req, res) {
       }
     }
     const wishlist = await findWishlistById(receipt.wishlistId)
-    const wishlistItems = await findWishlistItems(wishlist.wishlistItems)
+    const wishlistItems = await findWishlistItems(wishlist.wishlistItemIds)
+
     const wishlistItemNames = wishlistItems.map(item => item.name)
 
     // TODO: Only allow machine read items in receipt items
@@ -77,11 +78,13 @@ async function postReceiptItem (req, res) {
       const name = prevWishlistItemNames[prevWishlistItemNames.length - 1]
       const wishlistItemIdx = wishlistItemNames.indexOf(name)
       // Creates wishlist item if not defined
-      const wishlistItem = await createWishlistItem({ name })
-
+      let wishlistItem
       if (wishlistItemIdx === -1) {
         // Add wishlist item to wishlist
+        wishlistItem = await createWishlistItem({ name })
         await updateWishlist(wishlist, { wishlistItemIds: [...wishlist.wishlistItemIds, wishlistItem._id] })
+      } else {
+        wishlistItem = wishlistItems[wishlistItemIdx]
       }
       setPreferencesForWishlistItem(group, wishlist, wishlistItem, req)
       await updateReceiptItem(receiptItem, { wishlistItemId: wishlistItem._id, wishlistItemSet: true })
