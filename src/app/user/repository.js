@@ -29,7 +29,7 @@ function searchUsersByEmail (email, { fields } = {}) {
   return User.find({ $text: { $search: email } }).select(fields)
 }
 
-function findUsers ({ ids, fields }) {
+function findUsers (ids, { fields } = {}) {
   const query = { _id: { $in: ids } }
   return User.find(query).select(fields)
 }

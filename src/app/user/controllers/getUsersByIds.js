@@ -13,7 +13,7 @@ const sanitize = require('mongo-sanitize')
 async function getUsersByIds (req, res) {
   sanitize(req.query)
   const { ids } = req.query
-  const users = await findUsers({ ids })
+  const users = await findUsers(ids)
   res.success({ users: _keyBy(users, '_id') })
 }
 module.exports = { getUsersByIds }

@@ -231,4 +231,4 @@ async function updateReceiptAndTaxTransaction (group, receipt, wishlist, updates
   }
   conductTaxTransaction(group, { ...receipt.toObject(), ...updates }, wishlist)
 }
-module.exports = { conductTransaction, canLeave, reconductTransactionsFromMultipleReceiptItems, cancelTaxTransaction, conductTaxTransaction, updateReceiptAndTaxTransaction }
+module.exports = { conductTransaction, canLeave, reconductTransactionsFromMultipleReceiptItems, cancelTaxTransaction, conductTaxTransaction, updateReceiptAndTaxTransaction, computeWant }

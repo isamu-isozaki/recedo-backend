@@ -10,6 +10,9 @@ router.use(authenticateUser)
 /**
   * Get
   */
+const { getJson } = require('./controllers/getJson')
+router.get('/json', getJson)
+
 const { getReceipt } = require('./controllers/getReceipt')
 router.get('/', getReceipt)
 
